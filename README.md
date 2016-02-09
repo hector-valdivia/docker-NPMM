@@ -1,2 +1,2 @@
 # docker-NPMM
-Archivo docker para contruir Nginx PHP MongoDB MySQL
+Archivo docker para configurar Nginx PHP MongoDB MySQL
