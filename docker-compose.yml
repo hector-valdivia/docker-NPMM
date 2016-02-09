@@ -1,0 +1,25 @@
+keyaphp:
+  image: hectorlouder/docker-php-mongodb-mysql-nginx
+  ports:
+    - "80:80"
+    - "443:443"
+    - "9000:9000"
+  links:
+    - mysql:mysql
+    - mongo:mongo
+  volumes:
+    - ./www:/var/www
+    - ./sites:/etc/nginx/conf.d
+    - ./logs:/var/log/supervisor
+
+mysql:
+  image: mysql:5.6.28
+  ports:
+    - "3306:3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: password
+
+mongo:
+  image: mongo:3.2.1
+  ports:
+    - "27017:27017"
