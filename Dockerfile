@@ -23,7 +23,7 @@ RUN apt-get update \
     unzip \
     subversion
 
-# Install packages
+# Install PHP packages
 RUN apt-get update && apt-get install -y -qq \
     php5-dev \
     php5-cli \
