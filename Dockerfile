@@ -15,16 +15,16 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C300EE8C \
 && echo "deb http://ppa.launchpad.net/nginx/stable/ubuntu trusty main" > /etc/apt/sources.list.d/nginx-stable.list
 RUN apt-get update \
 && apt-get install -y \
-nginx 
-
-# Install packages
-RUN apt-get update && apt-get install -y -qq \
+    nginx \
     supervisor \
     curl \
     git \
     wget \
     unzip \
-    subversion \
+    subversion
+
+# Install packages
+RUN apt-get update && apt-get install -y -qq \
     php5-dev \
     php5-cli \
     php5-mysql \
