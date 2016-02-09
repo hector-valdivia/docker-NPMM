@@ -39,7 +39,7 @@ RUN apt-get update && \
         php5-mysql      \
         php5-redis      \
         php5-tidy       \
-        php-apc
+        php-apc         \
         && pecl install mongodb
 
 RUN sed -ir 's@^#@//@' /etc/php5/mods-available/*
