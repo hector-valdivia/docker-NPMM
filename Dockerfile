@@ -10,12 +10,14 @@ ENV LC_ALL     en_US.UTF-8
 
 RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
 
+ENV HOME /root
+
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
 
 #Install Tools
 RUN curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
-RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y build-essential nano wget git
+RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y build-essential vim wget git
 RUN add-apt-repository -y ppa:ondrej/php5
 RUN add-apt-repository -y ppa:nginx/stable
 
@@ -60,7 +62,7 @@ RUN php5enmod xdebug
 
 # PHP-FPM
 RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install --yes php5-fpm
-RUN php5enmod -s fpm mcrypt xhprof xdebug
+RUN php5enmod -s fpm mcrypt xdebug
 
 # Enable MongoDB PHP
 RUN echo "extension=mongodb.so" > /etc/php5/mods-available/mongodb.ini
@@ -119,10 +121,6 @@ RUN mkdir /var/www_files && \
     chgrp www-data /var/www_files && \
     chmod 775 /var/www_files
 
-# Ensure that PHP5 FPM is run as root.
-RUN sed -i "s/user = www-data/user = root/" /etc/php5/fpm/pool.d/www.conf
-RUN sed -i "s/group = www-data/group = root/" /etc/php5/fpm/pool.d/www.conf
-
 # Pass all docker environment
 RUN sed -i '/^;clear_env = no/s/^;//' /etc/php5/fpm/pool.d/www.conf
 
@@ -136,8 +134,10 @@ RUN sed -i '/^;pm\.status_path/s/^;//' /etc/php5/fpm/pool.d/www.conf
 # XDebug loaded with the core
 RUN sed -i '/.*xdebug.so$/s/^/;/' /etc/php5/mods-available/xdebug.ini
 
-#Copy configs
+# Copy configs
 COPY ./conf/php5/fpm/php.ini /etc/php5/fpm/php.ini
+COPY ./conf/php5/fpm/pool.d/www.conf /etc/php5/fpm/pool.d/www.conf
+COPY ./conf/php5/cli/php.ini /etc/php5/cli/php.ini
 COPY ./conf/nginx/default /etc/nginx/sites-available/default
 COPY ./conf/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY ./conf/ssh/sshd_config /etc/ssh/sshd_config
